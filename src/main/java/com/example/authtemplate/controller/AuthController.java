@@ -4,18 +4,18 @@ import com.example.authtemplate.dto.LoginRequest;
 import com.example.authtemplate.dto.RegisterRequest;
 import com.example.authtemplate.dto.AuthResponse;
 import com.example.authtemplate.service.AuthService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@NoArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+    private AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
