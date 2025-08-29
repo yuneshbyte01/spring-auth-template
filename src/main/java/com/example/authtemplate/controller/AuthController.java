@@ -4,25 +4,43 @@ import com.example.authtemplate.dto.LoginRequest;
 import com.example.authtemplate.dto.RegisterRequest;
 import com.example.authtemplate.dto.AuthResponse;
 import com.example.authtemplate.service.AuthService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller for authentication endpoints.
+ *
+ * <p>Provides APIs for:</p>
+ * <ul>
+ *   <li>User registration</li>
+ *   <li>User login (JWT issuance)</li>
+ * </ul>
+ */
 @RestController
-@NoArgsConstructor
-@AllArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private AuthService authService;
+    // Authentication service for handling business logic
+    private final AuthService authService;
 
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    // Register a new user
+    @Operation(summary = "Register a new user", description = "Registers a user with email and password")
+    @ApiResponse(responseCode = "200", description = "User registered successfully")
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
         authService.register(request);
         return ResponseEntity.ok("User registered successfully");
     }
 
+    // Authenticate a user and return a JWT
+    @Operation(summary = "Login user", description = "Authenticates a user and returns JWT token")
+    @ApiResponse(responseCode = "200", description = "Login successful, returns JWT")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));

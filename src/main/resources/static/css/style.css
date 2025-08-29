@@ -1,0 +1,93 @@
+/* Basic page style */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7f9;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Centered container */
+.container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 350px;
+}
+
+/* Form styling */
+.form-card input {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-card button {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    background: #007BFF;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.form-card button:hover {
+    background: #0056b3;
+}
+
+/* Divider between login methods */
+.divider {
+    margin: 1rem 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* GitHub button */
+.github-btn {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 6px;
+    background: #333;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.github-btn:hover {
+    background: #111;
+}
+
+/* Message box styling */
+.message-box {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* Green transparent success box */
+.success {
+    background: rgba(46, 125, 50, 0.1);
+    border: 1px solid #2e7d32;
+    color: #2e7d32;
+}
+
+/* Red transparent error box */
+.error {
+    background: rgba(198, 40, 40, 0.1);
+    border: 1px solid #c62828;
+    color: #c62828;
+}

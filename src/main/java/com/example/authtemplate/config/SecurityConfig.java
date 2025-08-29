@@ -37,6 +37,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
                         .requestMatchers("/api/auth/**").permitAll()
@@ -44,6 +46,9 @@ public class SecurityConfig {
 
                         // Protected demo endpoint
                         .requestMatchers("/api/hello").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+                        // Page, CSS, JS
+                        .requestMatchers("login.html", "/css/**", "/js/**").permitAll()
 
                         // Everything else must be authenticated
                         .anyRequest().authenticated()

@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -14,16 +15,21 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * JWT authentication filter that validates tokens on every request.
+ *
+ * <p>Intercepts HTTP requests, extracts the JWT from the Authorization header,
+ * validates it, and sets the authentication context if valid.</p>
+ */
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    // Utility for JWT operations (token generation, validation, extraction)
     private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
-        this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
-    }
+    // Repository for retrieving user details from the database
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -35,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = null;
         String token = null;
 
+        // Extract token from the "Authorization" header if present
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             try {
@@ -46,14 +53,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
+        // Authenticate user if username is valid and context is not yet set
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var user = userRepository.findByEmail(username).orElse(null);
 
             if (user != null && jwtUtil.validateToken(token)) {
+                // Create an authentication token with user details and role
                 var authToken = new UsernamePasswordAuthenticationToken(
-                        user, null, // principal = user object
+                        user, null,
                         user.getRole() != null
-                                ? java.util.List.of(() -> user.getRole().name()) // Role enum -> GrantedAuthority
+                                ? java.util.List.of(() -> user.getRole().name())
                                 : java.util.List.of()
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -62,6 +71,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
+        // Continue the filter chain
         filterChain.doFilter(request, response);
     }
 }

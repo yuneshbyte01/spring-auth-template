@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Auth Template</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h2>🔐 Login</h2>
+
+    <!-- Local login form -->
+    <form id="loginForm" class="form-card">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="divider">or</div>
+
+    <!-- GitHub login -->
+    <a href="http://localhost:8080/oauth2/authorization/github">
+        <button type="button" class="github-btn">Login with GitHub</button>
+    </a>
+
+    <!-- Success/Error message box -->
+    <div id="messageBox" class="message-box" style="display: none;"></div>
+</div>
+
+<script src="/js/login.js"></script>
+</body>
+</html>
