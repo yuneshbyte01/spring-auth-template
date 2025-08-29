@@ -1,0 +1,139 @@
+/* Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
+
+body {
+    background: #f6f5f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container */
+.auth-container {
+    display: flex;
+    width: 900px;
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+    0 10px 10px rgba(0,0,0,0.22);
+    overflow: hidden;
+    background: #fff;
+}
+
+/* Panels */
+.auth-panel {
+    flex: 1;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Gradient Panel */
+.gradient {
+    background: linear-gradient(to right, #ff4b2b, #ff416c);
+    color: white;
+    text-align: center;
+}
+.gradient h2 { margin-bottom: 10px; }
+.gradient p { margin-bottom: 20px; font-size: 14px; }
+.gradient .ghost {
+    background: transparent;
+    border: 1px solid white;
+    padding: 10px 30px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.gradient .ghost:hover {
+    background: white;
+    color: #ff4b2b;
+}
+
+/* Form Panel */
+.form-panel h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+.form-panel form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.form-panel input {
+    margin: 8px 0;
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 300px;
+    font-size: 14px;
+}
+.form-panel button {
+    margin-top: 15px;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 30px;
+    background-color: #ff4b2b;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.form-panel button:hover {
+    background-color: #ff3a1a;
+}
+
+/* Social Login Section */
+.social-login {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+.social-btn {
+    width: 40px;
+    height: 40px;
+    margin: 0 5px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+/* GitHub button */
+.social-btn.github { background-color: #333; }
+.social-btn.github:hover { background-color: #000; }
+/* Google button (future use) */
+.social-btn.google { background-color: #db4437; }
+.social-btn.google:hover { background-color: #c1351d; }
+/* LinkedIn button (future use) */
+.social-btn.linkedin { background-color: #0a66c2; }
+.social-btn.linkedin:hover { background-color: #004182; }
+
+.small-text {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* Message Boxes */
+.message-box {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    max-width: 300px;
+    text-align: center;
+}
+.success { background: rgba(46, 125, 50, 0.1); border: 1px solid #2e7d32; color: #2e7d32; }
+.error { background: rgba(198, 40, 40, 0.1); border: 1px solid #c62828; color: #c62828; }

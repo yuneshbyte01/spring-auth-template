@@ -6,21 +6,28 @@ import com.example.authtemplate.dto.LoginRequest;
 import com.example.authtemplate.dto.RegisterRequest;
 import com.example.authtemplate.entity.Role;
 import com.example.authtemplate.entity.User;
+import com.example.authtemplate.entity.VerificationToken;
 import com.example.authtemplate.exception.InvalidCredentialsException;
 import com.example.authtemplate.exception.UserAlreadyExistsException;
 import com.example.authtemplate.exception.UserNotFoundException;
 import com.example.authtemplate.repository.UserRepository;
+import com.example.authtemplate.repository.VerificationTokenRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Service layer for handling authentication operations.
  *
  * <p>Provides functionality for:</p>
  * <ul>
- *   <li>Registering new users</li>
+ *   <li>Registering new users with email verification</li>
  *   <li>Authenticating users with email and password</li>
+ *   <li>Blocking login until email is verified</li>
  *   <li>Issuing JWT tokens upon successful authentication</li>
  * </ul>
  */
@@ -31,33 +38,71 @@ public class AuthService {
     // Repository for accessing and persisting user data
     private final UserRepository userRepository;
 
+    // Repository for verification token storage
+    private final VerificationTokenRepository verificationTokenRepository;
+
     // Password encoder for hashing and verifying passwords
     private final PasswordEncoder passwordEncoder;
 
     // Utility for generating and validating JWT tokens
     private final JwtUtil jwtUtil;
 
-    // Register a new user with default role USER
+    // Service for sending emails
+    private final EmailService emailService;
+
+    // Register a new user (inactive until email verification)
+    @Transactional
     public void register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyExistsException("Email already registered: " + request.getEmail());
         }
 
+        // Save user (disabled by default)
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword())) // store hashed password
-                .enabled(true)
-                .role(Role.ROLE_USER) // assign default role
+                .password(passwordEncoder.encode(request.getPassword()))
+                .enabled(false)
+                .role(Role.ROLE_USER)
                 .build();
-
         userRepository.save(user);
+
+        // Save a verification token
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = VerificationToken.builder()
+                .token(token)
+                .user(user)
+                .expiryDate(LocalDateTime.now().plusHours(24))
+                .build();
+        verificationTokenRepository.save(verificationToken);
+
+        // ---- Transaction ends here if the commit succeeds ----
+
+        // Send email outside transaction
+        try {
+            String link = "http://localhost:8080/api/auth/verify?token=" + token;
+            emailService.sendEmail(
+                    user.getEmail(),
+                    "Verify your account",
+                    "Hello " + user.getName() + ",\n\n" +
+                            "Please verify your account by clicking the link below:\n" +
+                            link + "\n\nThis link will expire in 24 hours."
+            );
+        } catch (Exception e) {
+            System.err.println("⚠️ Failed to send email: " + e.getMessage());
+            // Optionally log to monitoring but do NOT roll back
+        }
     }
 
     // Authenticate user and return JWT with user details
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + request.getEmail()));
+
+        // Block login if isn't verified
+        if (!user.isEnabled()) {
+            throw new InvalidCredentialsException("Please verify your email before logging in");
+        }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid password for email: " + request.getEmail());
@@ -73,4 +118,25 @@ public class AuthService {
                 user.getRole().name()
         );
     }
+
+    // Verify a user's email using the token
+    @Transactional
+    public String verifyUser(String token) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new InvalidCredentialsException("❌ Invalid verification token"));
+
+        if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new InvalidCredentialsException("❌ Verification token expired");
+        }
+
+        User user = verificationToken.getUser();
+        user.setEnabled(true); // activate account
+        userRepository.save(user);
+
+        // Clean up token so it can't be reused
+        verificationTokenRepository.delete(verificationToken);
+
+        return "✅ Email verified successfully! You can now log in.";
+    }
+
 }

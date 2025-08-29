@@ -56,7 +56,7 @@ public class User {
     // Flag indicating if the account is active
     @Column(nullable = false)
     @Builder.Default
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     // Role assigned to the user (e.g., STUDENT, ORGANIZATION, ADMIN)
     @Enumerated(EnumType.STRING)

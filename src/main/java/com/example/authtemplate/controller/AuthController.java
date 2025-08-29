@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * <ul>
  *   <li>User registration</li>
  *   <li>User login (JWT issuance)</li>
+ *   <li>Email verification</li>
  * </ul>
  */
 @RestController
@@ -45,4 +46,14 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
+
+    // Verify the user account via token
+    @Operation(summary = "Verify email", description = "Activates a user account after email verification")
+    @ApiResponse(responseCode = "200", description = "Email verified successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid or expired token")
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyAccount(@RequestParam("token") String token) {
+        return ResponseEntity.ok(authService.verifyUser(token));
+    }
+
 }

@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/hello").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
                         // Page, CSS, JS
-                        .requestMatchers("login.html", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/pages/**", "/css/**", "/js/**").permitAll()
 
                         // Everything else must be authenticated
                         .anyRequest().authenticated()

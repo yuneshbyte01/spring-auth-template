@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | Auth Template</title>
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="auth-container">
+    <!-- Left Panel -->
+    <div class="auth-panel gradient">
+        <h2>Welcome Back!</h2>
+        <p>To keep connected with us, please log in with your personal info</p>
+        <a href="login.html"><button class="ghost">Sign In</button></a>
+    </div>
+
+    <!-- Right Panel (Register Form) -->
+    <div class="auth-panel form-panel">
+        <h2>Create Account</h2>
+
+        <!-- Social Login -->
+        <div class="social-login">
+            <a href="http://localhost:8080/oauth2/authorization/github" class="social-btn github">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+        <p class="small-text">or use your email for registration</p>
+
+        <!-- Local Registration Form -->
+        <form id="registerForm">
+            <input type="text" id="name" placeholder="Full Name" required />
+            <input type="email" id="email" placeholder="Email" required />
+            <input type="password" id="password" placeholder="Password" required />
+            <button type="submit">Sign Up</button>
+        </form>
+
+        <div id="registerMessage" class="message-box" style="display:none;"></div>
+    </div>
+</div>
+
+<script src="/js/register.js"></script>
+</body>
+</html>
