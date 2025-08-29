@@ -11,7 +11,7 @@
     <!-- Left Panel -->
     <div class="auth-panel gradient">
         <h2>Hello, Friend!</h2>
-        <p>Enter your personal details and start journey with us</p>
+        <p>Enter your personal details and start a journey with us</p>
         <a href="register.html"><button class="ghost">Sign Up</button></a>
     </div>
 
@@ -34,10 +34,29 @@
             <button type="submit">Sign In</button>
         </form>
 
+        <!-- Forgot Password Link -->
+        <p class="small-text">
+            <a href="#" id="forgotToggle" class="forgot-link">Forgot Password?</a>
+        </p>
+
         <div id="loginMessage" class="message-box" style="display:none;"></div>
     </div>
 </div>
 
+<!-- Forgot Password Modal -->
+<div id="forgotModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Forgot Password</h3>
+        <form id="forgotForm">
+            <input type="email" id="forgotEmail" placeholder="Enter your email" required />
+            <button type="submit">Send Reset Link</button>
+        </form>
+        <div id="forgotMessage" class="message-box" style="display:none;"></div>
+    </div>
+</div>
+
 <script src="/js/login.js"></script>
+<script src="/js/forget-password.js"></script>
 </body>
 </html>

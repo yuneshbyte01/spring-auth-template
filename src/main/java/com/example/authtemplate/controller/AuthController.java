@@ -56,4 +56,21 @@ public class AuthController {
         return ResponseEntity.ok(authService.verifyUser(token));
     }
 
+    // Request password reset
+    @Operation(summary = "Request password reset", description = "Sends a password reset email if the user exists")
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        authService.forgotPassword(email);
+        return ResponseEntity.ok("Password reset link sent to your email.");
+    }
+
+    // Reset password using token
+    @Operation(summary = "Reset password", description = "Resets user password using a valid reset token")
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        authService.resetPassword(token, newPassword);
+        return ResponseEntity.ok("Password reset successful.");
+    }
+
+
 }

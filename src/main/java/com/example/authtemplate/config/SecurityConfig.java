@@ -44,9 +44,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/oauth2/**").permitAll()
 
-                        // Protected demo endpoint
-                        .requestMatchers("/api/hello").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-
                         // Page, CSS, JS
                         .requestMatchers("/pages/**", "/css/**", "/js/**").permitAll()
 

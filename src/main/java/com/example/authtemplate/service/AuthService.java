@@ -4,12 +4,14 @@ import com.example.authtemplate.config.JwtUtil;
 import com.example.authtemplate.dto.AuthResponse;
 import com.example.authtemplate.dto.LoginRequest;
 import com.example.authtemplate.dto.RegisterRequest;
+import com.example.authtemplate.entity.PasswordResetToken;
 import com.example.authtemplate.entity.Role;
 import com.example.authtemplate.entity.User;
 import com.example.authtemplate.entity.VerificationToken;
 import com.example.authtemplate.exception.InvalidCredentialsException;
 import com.example.authtemplate.exception.UserAlreadyExistsException;
 import com.example.authtemplate.exception.UserNotFoundException;
+import com.example.authtemplate.repository.PasswordResetTokenRepository;
 import com.example.authtemplate.repository.UserRepository;
 import com.example.authtemplate.repository.VerificationTokenRepository;
 import jakarta.transaction.Transactional;
@@ -40,6 +42,9 @@ public class AuthService {
 
     // Repository for verification token storage
     private final VerificationTokenRepository verificationTokenRepository;
+
+    // Repository for password-reset tokens
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     // Password encoder for hashing and verifying passwords
     private final PasswordEncoder passwordEncoder;
@@ -130,13 +135,64 @@ public class AuthService {
         }
 
         User user = verificationToken.getUser();
-        user.setEnabled(true); // activate account
+        user.setEnabled(true); // activate an account
         userRepository.save(user);
 
         // Clean up token so it can't be reused
         verificationTokenRepository.delete(verificationToken);
 
         return "✅ Email verified successfully! You can now log in.";
+    }
+
+    // Handle forgot password request
+    @Transactional
+    public void forgotPassword(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+
+        // Generate token
+        String token = UUID.randomUUID().toString();
+
+        // Save reset token
+        PasswordResetToken resetToken = PasswordResetToken.builder()
+                .token(token)
+                .user(user)
+                .expiryDate(LocalDateTime.now().plusMinutes(30)) // valid 30 minutes
+                .build();
+
+        passwordResetTokenRepository.save(resetToken);
+
+        // Send reset email
+        try {
+            String link = "http://localhost:8080/reset-password.html?token=" + token;
+            emailService.sendEmail(
+                    user.getEmail(),
+                    "Password Reset Request",
+                    "Hello " + user.getName() + ",\n\n" +
+                            "Click the link below to reset your password:\n" +
+                            link + "\n\nThis link will expire in 30 minutes."
+            );
+        } catch (Exception e) {
+            System.err.println("⚠️ Failed to send password reset email: " + e.getMessage());
+        }
+    }
+
+    // Reset password using the token
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid reset token"));
+
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new InvalidCredentialsException("Reset token expired");
+        }
+
+        User user = resetToken.getUser();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        // Delete token after successful reset
+        passwordResetTokenRepository.delete(resetToken);
     }
 
 }
