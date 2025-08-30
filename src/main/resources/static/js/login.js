@@ -4,28 +4,31 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value.trim();
     const messageBox = document.getElementById("loginMessage");
+    const submitBtn = document.getElementById("loginSubmit");
 
     try {
-        const res = await fetch("http://localhost:8080/api/auth/login", {
+        UI.setBusy(submitBtn, true);
+        const data = await API.http("/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
         });
+        // Store JWT token for dashboard access
+        localStorage.setItem("jwt_token", data.accessToken);
+        
+        // Also store in sessionStorage as backup
+        sessionStorage.setItem("jwt_token", data.accessToken);
 
-        if (!res.ok) throw new Error("❌ Invalid credentials");
+        UI.showMessage(messageBox, "✅ Login successful! Redirecting to dashboard...", "success");
 
-        const data = await res.json();
-        localStorage.setItem("jwt", data.accessToken);
-
-        messageBox.textContent = "✅ Login successful!";
-        messageBox.className = "message-box success";
-        messageBox.style.display = "block";
-
-        // Redirect example
-        // window.location.href = "/dashboard.html";
+        // Redirect to dashboard after successful login
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 1500);
     } catch (err) {
-        messageBox.textContent = err.message;
-        messageBox.className = "message-box error";
-        messageBox.style.display = "block";
+        UI.showMessage(messageBox, err.message || "❌ Invalid credentials", "error");
+    }
+    finally {
+        UI.setBusy(submitBtn, false);
     }
 });

@@ -1,13 +1,15 @@
 package com.example.authtemplate.config;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import java.util.Date;
+
+import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.util.Date;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 /**
  * Utility class for handling JWT operations.
@@ -31,12 +33,13 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // Generate a JWT token for the given username
-    public String generateToken(String username) {
+    // Generate a JWT token for the given username with roles
+    public String generateToken(String username, String... roles) {
         return Jwts.builder()
                 .setSubject(username) // set user identity
                 .setIssuedAt(new Date()) // token issue time
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs)) // expiry
+                .claim("roles", roles) // add user roles
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256) // sign with secret
                 .compact();
     }

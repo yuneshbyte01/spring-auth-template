@@ -15,7 +15,7 @@
 - **JWT-based authentication** with configurable expiration
 - **Role-based access control** (RBAC) with predefined roles
 - **Email verification** for new account activation
-- **Secure password reset** with token-based flow
+- **Secure password reset** with a token-based flow
 - **OAuth2 integration** with GitHub support
 
 ### 🏗️ Architecture & Design
@@ -143,7 +143,7 @@ http://localhost:8080/swagger-ui.html
 ### 🔐 Authentication Flow
 
 1. **Registration**: User signs up → Email verification sent
-2. **Verification**: User clicks email link → Account activated
+2. **Verification**: User clicks an email link → Account activated
 3. **Login**: User authenticates → JWT token issued
 4. **Access**: JWT used for protected endpoints
 
@@ -186,7 +186,7 @@ spring.jpa.hibernate.ddl-auto=update
 ### JWT Configuration
 ```properties
 jwt.secret=${JWT_SECRET}
-jwt.expirationMs=3600000  # 1 hour
+jwt.expirationMs=3,600,000 # 1 hour
 ```
 
 ### Email Configuration

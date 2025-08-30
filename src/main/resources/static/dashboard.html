@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Auth Template</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <button class="theme-toggle" type="button" aria-label="Switch theme">Theme</button>
+    <div class="dashboard-container">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p>Loading your dashboard...</p>
+        </div>
+        
+        <!-- Error State -->
+        <div id="errorState" class="error-message hidden">
+            <h3>⚠️ Authentication Error</h3>
+            <p id="errorMessage">Unable to load dashboard. Please log in again.</p>
+            <button onclick="window.location.href='login.html'" class="logout-btn">Go to Login</button>
+        </div>
+        
+        <!-- Dashboard Content -->
+        <div id="dashboardContent" class="hidden">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h1>Welcome Back! 🎉</h1>
+                <p>Manage your account and access your personalized features</p>
+                <div class="role-badge" id="roleBadge">
+                    <i class="fas fa-user-shield"></i> <span id="userRole">Loading...</span>
+                </div>
+            </div>
+            
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- User Profile Card -->
+                <div class="dashboard-card">
+                    <i class="fas fa-user-circle"></i>
+                    <h3>User Profile</h3>
+                    <p>View and manage your personal information</p>
+                    <a href="#" onclick="accessUserProfile()">Access Profile</a>
+                </div>
+                
+                <!-- Admin Dashboard Card (Hidden for non-admin users) -->
+                <div class="dashboard-card" id="adminCard" style="display:none;">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <h3>Admin Dashboard</h3>
+                    <p>Access administrative controls and system management</p>
+                    <a href="#" onclick="accessAdminDashboard()">Admin Panel</a>
+                </div>
+                
+                <!-- Settings Card -->
+                <div class="dashboard-card">
+                    <i class="fas fa-cog"></i>
+                    <h3>Settings</h3>
+                    <p>Configure your account preferences</p>
+                    <a href="#" onclick="showSettings()">Manage Settings</a>
+                </div>
+            </div>
+            
+            <!-- Logout Section -->
+            <div class="logout-section">
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

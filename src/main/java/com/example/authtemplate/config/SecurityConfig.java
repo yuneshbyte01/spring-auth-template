@@ -44,8 +44,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/oauth2/**").permitAll()
 
-                        // Page, CSS, JS
-                        .requestMatchers("/pages/**", "/css/**", "/js/**").permitAll()
+                        // Static resources
+                        .requestMatchers("/css/**", "/js/**", "/pages/**", "/dashboard.html", "/favicon.ico").permitAll()
+
+                        // Admin endpoints - only accessible by ADMIN
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        // User endpoints - accessible by both USER and ADMIN
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
 
                         // Everything else must be authenticated
                         .anyRequest().authenticated()
