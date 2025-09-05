@@ -11,6 +11,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Spring Security configuration class.
+ *
+ * <p>Defines the security settings for the authentication template, including:</p>
+ * <ul>
+ *   <li>Authentication mechanism (OAuth2 + JWT)</li>
+ *   <li>Authorization rules</li>
+ *   <li>Custom login page</li>
+ * </ul>
+ *
+*/
 @Configuration
 public class SecurityConfig {
 
@@ -41,26 +52,27 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/oauth2/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/oauth2/**").permitAll()
 
                         // Static resources
-                        .requestMatchers("/css/**", "/js/**", "/pages/**", "/dashboard.html", "/favicon.ico").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/pages/**", "/dashboard.html", "/login.html",
+                                "/favicon.ico").permitAll()
 
-                        // Admin endpoints - only accessible by ADMIN
+                        // Admin endpoints
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // User endpoints - accessible by both USER and ADMIN
+                        // User endpoints
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
 
-                        // Everything else must be authenticated
+                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
-                // Enable GitHub OAuth2 login
+                // OAuth2 login: works with both GitHub + Google (from application.properties)
                 .oauth2Login(oauth -> oauth
+                        .loginPage("/login") // optional: your custom login page
                         .successHandler(oAuth2LoginSuccessHandler)
                 )
-                // Add our JWT filter
+                // Add JWT filter before UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -6,6 +6,7 @@ import com.example.authtemplate.dto.AuthResponse;
 import com.example.authtemplate.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,15 +21,12 @@ import org.springframework.web.bind.annotation.*;
  * </ul>
  */
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
 
     // Authentication service for handling business logic
     private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     // Register a new user
     @Operation(summary = "Register a new user", description = "Registers a user with email and password")
@@ -72,5 +70,11 @@ public class AuthController {
         return ResponseEntity.ok("Password reset successful.");
     }
 
-
+    // Get a current authenticated user
+    @Operation(summary = "Get current user", description = "Returns details of the authenticated user from JWT")
+    @ApiResponse(responseCode = "200", description = "User details returned successfully")
+    @GetMapping("/me")
+    public ResponseEntity<AuthResponse> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
+        return ResponseEntity.ok(authService.getCurrentUser(authHeader));
+    }
 }

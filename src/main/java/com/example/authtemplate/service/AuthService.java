@@ -195,4 +195,28 @@ public class AuthService {
         passwordResetTokenRepository.delete(resetToken);
     }
 
+    // Get current authenticated user details from JWT
+    public AuthResponse getCurrentUser(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new InvalidCredentialsException("Missing or invalid Authorization header");
+        }
+
+        String token = authHeader.substring(7); // Remove "Bearer "
+        if (!jwtUtil.validateToken(token)) {
+            throw new InvalidCredentialsException("Invalid or expired JWT token");
+        }
+
+        String email = jwtUtil.extractUsername(token);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+
+        return new AuthResponse(
+                token,
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole().name()
+        );
+    }
+
 }

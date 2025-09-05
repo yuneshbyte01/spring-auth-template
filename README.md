@@ -291,7 +291,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 🔮 Roadmap
 
-- [ ] **Google OAuth2** integration
 - [ ] **Refresh token** implementation
 - [ ] **Two-factor authentication** (2FA)
 - [ ] **Docker containerization**

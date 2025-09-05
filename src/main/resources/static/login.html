@@ -27,10 +27,14 @@
 
             <!-- Social Login -->
             <div class="social-login">
-                <a id="githubLogin" href="oauth2/authorization/github" class="social-btn github">
+                <a id="githubLogin" href="oauth2/authorization/github" class="social-btn github" title="Sign in with GitHub">
                     <i class="fab fa-github"></i>
                 </a>
+                <a id="googleLogin" href="oauth2/authorization/google" class="social-btn google" title="Sign in with Google">
+                    <i class="fab fa-google"></i>
+                </a>
             </div>
+
             <p class="small-text">or use your account</p>
 
             <!-- Local Login Form -->
@@ -57,7 +61,7 @@
                 <div class="icon"><i class="fas fa-key"></i></div>
                 <h3 id="forgotTitle">Reset your password</h3>
             </div>
-            <p id="forgotDesc" class="desc">Enter your email and we'll send a password reset link.</p>
+            <p id="forgotDesc" class="desc">Enter your email and we'll send a password-reset link.</p>
             <form id="forgotForm">
                 <label for="forgotEmail" class="sr-only">Email address</label>
                 <input id="forgotEmail" type="email" placeholder="Enter your email" required />

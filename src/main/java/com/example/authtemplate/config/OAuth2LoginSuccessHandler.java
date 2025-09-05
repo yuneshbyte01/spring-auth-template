@@ -29,10 +29,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    // Repository for user persistence
     private final UserRepository userRepository;
-
-    // Utility for generating JWT tokens
     private final JwtUtil jwtUtil;
 
     @Override
@@ -41,19 +38,29 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication)
             throws IOException, ServletException {
 
-        // Extract user details from the OAuth2 provider
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
-        // Get email (fallback for GitHub where email may be hidden)
+        // Get email (Google usually has it, GitHub may not)
         String email = oAuth2User.getAttribute("email");
         if (email == null) {
-            email = oAuth2User.getAttribute("login") + "@github.local";
+            String login = oAuth2User.getAttribute("login");
+            if (login != null) {
+                email = login + "@github.local"; // fallback synthetic email for GitHub
+            }
         }
 
-        // Get name (fallback to login if not provided)
+        // Get name (Google provides, GitHub sometimes does not)
         String name = oAuth2User.getAttribute("name");
         if (name == null) {
-            name = oAuth2User.getAttribute("login");
+            name = oAuth2User.getAttribute("login"); // fallback to login
+        }
+
+        // Final safety check
+        if (email == null) {
+            throw new RuntimeException("OAuth2 provider did not return an email");
+        }
+        if (name == null) {
+            name = email.substring(0, email.indexOf("@"));
         }
 
         // Create a user in DB if not exists
@@ -75,6 +82,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // Write JSON response
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         response.getWriter().write(String.format(
                 "{ \"accessToken\": \"%s\", \"userId\": %d, \"email\": \"%s\", \"role\": \"%s\" }",
                 token, user.getId(), user.getEmail(), user.getRole().name()
