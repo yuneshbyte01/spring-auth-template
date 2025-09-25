@@ -56,7 +56,7 @@ public class SecurityConfig {
 
                         // Static resources
                         .requestMatchers("/css/**", "/js/**", "/pages/**", "/dashboard.html", "/login.html",
-                                "/favicon.ico").permitAll()
+                                "/register.html", "/reset-password.html","/favicon.ico").permitAll()
 
                         // Admin endpoints
                         .requestMatchers("/admin/**").hasRole("ADMIN")

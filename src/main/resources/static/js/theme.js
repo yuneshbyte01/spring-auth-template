@@ -27,8 +27,8 @@
     const btn = document.querySelector('.theme-toggle');
     if (!btn) return;
     const icon = resolved === 'dark' ? '🌙' : '☀️';
-    const label = selected.toUpperCase();
-    btn.textContent = `${icon} Theme: ${label}`;
+    const label = selected === 'system' ? 'AUTO' : selected.toUpperCase();
+    btn.innerHTML = `${icon} <span>${label}</span>`;
     btn.setAttribute('aria-label', `Switch theme (currently ${label})`);
   }
 

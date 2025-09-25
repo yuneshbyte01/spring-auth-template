@@ -5,17 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Auth Template</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/loading.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <button class="theme-toggle" type="button" aria-label="Switch theme">Theme</button>
     <div class="dashboard-container">
         <!-- Loading State -->
-        <div id="loadingState" class="loading">
-            <div class="spinner"></div>
+        <div id="loadingState" class="spinner-container">
+            <div class="spinner-enhanced"></div>
             <p>Loading your dashboard...</p>
+            <div class="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
         
         <!-- Error State -->
@@ -26,9 +35,9 @@
         </div>
         
         <!-- Dashboard Content -->
-        <div id="dashboardContent" class="hidden">
+        <div id="dashboardContent" class="hidden" role="main" aria-label="Main dashboard content">
             <!-- Welcome Section -->
-            <div class="welcome-section">
+            <div class="welcome-section fade-in-up">
                 <h1>Welcome Back! 🎉</h1>
                 <p>Manage your account and access your personalized features</p>
                 <div class="role-badge" id="roleBadge">
@@ -39,34 +48,44 @@
             <!-- Dashboard Grid -->
             <div class="dashboard-grid">
                 <!-- User Profile Card -->
-                <div class="dashboard-card">
+                <div class="dashboard-card fade-in-up" style="animation-delay: 0.1s;">
                     <i class="fas fa-user-circle"></i>
                     <h3>User Profile</h3>
                     <p>View and manage your personal information</p>
-                    <a href="#" onclick="accessUserProfile()">Access Profile</a>
+                    <a href="#" onclick="accessUserProfile()">
+                        <i class="fas fa-arrow-right"></i>
+                        Access Profile
+                    </a>
                 </div>
                 
                 <!-- Admin Dashboard Card (Hidden for non-admin users) -->
-                <div class="dashboard-card" id="adminCard" style="display:none;">
+                <div class="dashboard-card fade-in-up" id="adminCard" style="display:none; animation-delay: 0.2s;">
                     <i class="fas fa-tachometer-alt"></i>
                     <h3>Admin Dashboard</h3>
                     <p>Access administrative controls and system management</p>
-                    <a href="#" onclick="accessAdminDashboard()">Admin Panel</a>
+                    <a href="#" onclick="accessAdminDashboard()">
+                        <i class="fas fa-arrow-right"></i>
+                        Admin Panel
+                    </a>
                 </div>
                 
                 <!-- Settings Card -->
-                <div class="dashboard-card">
+                <div class="dashboard-card fade-in-up" style="animation-delay: 0.3s;">
                     <i class="fas fa-cog"></i>
                     <h3>Settings</h3>
                     <p>Configure your account preferences</p>
-                    <a href="#" onclick="showSettings()">Manage Settings</a>
+                    <a href="#" onclick="showSettings()">
+                        <i class="fas fa-arrow-right"></i>
+                        Manage Settings
+                    </a>
                 </div>
             </div>
             
             <!-- Logout Section -->
-            <div class="logout-section">
+            <div class="logout-section fade-in-up" style="animation-delay: 0.4s;">
                 <button class="logout-btn" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                    <i class="fas fa-sign-out-alt"></i> 
+                    <span>Logout</span>
                 </button>
             </div>
         </div>
@@ -75,6 +94,7 @@
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/theme.js"></script>
+    <script src="js/accessibility.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>

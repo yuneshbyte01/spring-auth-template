@@ -7,13 +7,17 @@
     <title>Register | Auth Template</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/loading.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
     <button class="theme-toggle" type="button" aria-label="Switch theme">Theme</button>
-    <div class="auth-container">
+    <div class="auth-container" id="main-content" role="main" aria-label="Create account page">
         <!-- Left Panel -->
         <div class="auth-panel gradient">
             <h2>Welcome Back!</h2>
@@ -30,18 +34,37 @@
                 <a href="oauth2/authorization/github" class="social-btn github">
                     <i class="fab fa-github"></i>
                 </a>
+                <a href="oauth2/authorization/google" class="social-btn google">
+                    <i class="fab fa-google"></i>
+                </a>
             </div>
             <p class="small-text">or use your email for registration</p>
 
             <!-- Local Registration Form -->
-            <form id="registerForm">
+            <form id="registerForm" role="form" aria-label="Create account form">
                 <label for="name" class="sr-only">Full Name</label>
-                <input type="text" id="name" placeholder="Full Name" required />
-                <label for="email" class="sr-only">Email</label>
-                <input type="email" id="email" placeholder="Email" required />
+                <input type="text" id="name" placeholder="Full Name" required 
+                       aria-describedby="name-help" autocomplete="name" />
+                <label for="email" class="sr-only">Email address</label>
+                <input type="email" id="email" placeholder="Email" required 
+                       aria-describedby="email-help" autocomplete="email" />
                 <label for="password" class="sr-only">Password</label>
-                <input type="password" id="password" placeholder="Password" required />
-                <button id="registerSubmit" type="submit">Sign Up</button>
+                <input type="password" id="password" placeholder="Password" required 
+                       aria-describedby="password-rules" autocomplete="new-password" />
+                <progress id="strength-meter" max="6" value="0" 
+                         aria-label="Password strength indicator"></progress>
+                <ul class="password-rules" id="password-rules" role="list" aria-label="Password requirements">
+                    <li id="rule-length" role="listitem">Min 8 characters</li>
+                    <li id="rule-lowercase" role="listitem">At least one lowercase letter</li>
+                    <li id="rule-uppercase" role="listitem">At least one uppercase letter</li>
+                    <li id="rule-digit" role="listitem">At least one digit</li>
+                    <li id="rule-special" role="listitem">At least one special character (@$!%*?&-_. )</li>
+                    <li id="rule-noWhitespace" role="listitem">No spaces</li>
+                    <li id="rule-noUsername" role="listitem">Must not contain your email</li>
+                </ul>
+                <button id="registerSubmit" type="submit" aria-describedby="register-help">
+                    <span>Sign Up</span>
+                </button>
             </form>
 
             <div id="registerMessage" class="message-box" style="display:none;" aria-live="polite"></div>
@@ -51,7 +74,9 @@
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/theme.js"></script>
+    <script src="js/accessibility.js"></script>
     <script src="js/register.js"></script>
+    <script src="js/passwordUtils.js"></script>
 </body>
 
 </html>

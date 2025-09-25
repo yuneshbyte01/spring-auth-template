@@ -1,5 +1,6 @@
 package com.example.authtemplate.dto;
 
+import com.example.authtemplate.validation.ValidPassword;
 import lombok.Data;
 
 /**
@@ -18,5 +19,6 @@ public class RegisterRequest {
     private String email;
 
     // Password chosen by the user
+    @ValidPassword
     private String password;
 }
